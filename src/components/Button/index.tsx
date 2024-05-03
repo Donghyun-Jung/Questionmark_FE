@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, PropsWithChildren } from 'react';
 import Flex from '@/components/common/Flex';
 import Spinner from '@/components/common/Spinner';
-import * as Styled from './style';
+import * as Styled from './styles';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'outline' | 'ghost' | 'default';
