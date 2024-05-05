@@ -3,16 +3,6 @@ import { css } from '@emotion/react';
 import type { Meta, StoryObj } from '@storybook/react';
 import Calendar from '@/components/common/Calendar';
 
-export default {
-  component: Calendar,
-} as Meta<typeof Calendar>;
-
-export const Default = {
-  args: {},
-
-  name: 'Default',
-};
-
 export const WithState: StoryObj<typeof Calendar> = {
   render: function Render() {
     const [date, setDate] = useState(new Date());
@@ -39,7 +29,7 @@ export const UpperCalendar: StoryObj<typeof Calendar> = {
             height: 300px;
           `}
         />
-        <Calendar />
+        <Calendar popperPlacement="top" />
       </>
     );
   },
