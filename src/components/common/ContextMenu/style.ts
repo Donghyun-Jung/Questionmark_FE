@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 export const Root = styled.div`
-  width: 110px;
+  width: 7rem;
   padding: 0.1em 0;
   border: ${({ theme }) => `1px solid ${theme.colors.gray_400}`};
   border-radius: 5px;
@@ -14,6 +14,7 @@ export const Menu = styled.div`
   font-size: 0.875rem;
   font-weight: 700;
   cursor: pointer;
+  
   &:hover {
     background-color: ${({ theme }) => theme.colors.gray_300};
   }

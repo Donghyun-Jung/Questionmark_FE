@@ -7,11 +7,13 @@ type StyledInputProps = Pick<InputProps, 'status'>;
 export const Label = styled.label`
   display: block;
 `;
+
 export const LabelText = styled.div<LabelTextProps>`
   color: ${({ theme }) => theme.colors.black};
   font-weight: ${({ labelType }) => (labelType === 'bold' ? '700' : '500')};
   font-size: ${({ labelType }) => labelType === 'bold' && '1.25rem'};
 `;
+
 export const Input = styled.input<StyledInputProps>`
   width: 100%;
   margin: 0.25rem 0;
@@ -21,16 +23,20 @@ export const Input = styled.input<StyledInputProps>`
   border-color: ${({ status, theme }) => (status === 'error' ? theme.colors.red : theme.colors.blue_gray_300)};
   border-radius: 0.35rem;
   outline: none;
+
   &::placeholder {
     color: ${({ theme }) => theme.colors.blue_gray_300};
   }
+
   &:focus {
     border-color: #3b82f6;
   }
+
   &:disabled {
     color: ${({ theme }) => theme.colors.blue_gray_300};
   }
 `;
+
 export const Message = styled.p`
   margin: 0;
   padding-left: 0.25rem;
