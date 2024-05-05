@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { Props } from './index';
+
 type LabelTextProps = Pick<Props, 'labelType'>;
 type InputProps = Pick<Props, 'status' | 'disabled'>;
 
@@ -14,6 +15,7 @@ export const LabelText = styled.div<LabelTextProps>`
   font-weight: ${({ labelType }) => (labelType === 'bold' ? '700' : '500')};
   font-size: ${({ labelType }) => labelType === 'bold' && '1.25rem'};
 `;
+
 export const InputContainer = styled.div<InputProps>`
   ${({ theme, status, disabled }) => css`
     display: flex;
@@ -41,6 +43,7 @@ export const Input = styled.input`
   &::placeholder {
     color: ${({ theme }) => theme.colors.blue_gray_300};
   }
+  
   width: 100%;
   background-color: transparent;
   font-size: inherit;
