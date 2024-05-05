@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import type { DividerProps } from '@/components/common/Divder';
+import type { DividerProps } from '@/components/common/Divider';
 import type { EmotionTheme } from '@/styles/emotion';
 
 type StyledDividerProps = Required<Pick<DividerProps, 'percent' | 'direction'>>;
