@@ -9,6 +9,7 @@ export const CustomContainer = styled.div`
     padding: 0.4rem 0.25rem;
     line-height: 1;
   }
+
   .react-datepicker {
     border-radius: 6px;
     border: 1px solid #e5e7eb;
@@ -18,35 +19,43 @@ export const CustomContainer = styled.div`
       0px 1px 2px -1px rgba(0, 0, 0, 0.1);
     font-size: 0.875em;
   }
+
   .react-datepicker__triangle {
     display: none;
   }
+
   .react-datepicker__header {
     background-color: #fff;
     border: none;
   }
+
   .react-datepicker__day-name {
     width: 1.9rem;
     line-height: 1.9rem;
     color: #71717a;
   }
+
   .react-datepicker__day {
     width: 1.9rem;
     line-height: 1.9rem;
   }
+
   .react-datepicker__day--outside-month {
     color: #a1a1aa;
   }
+
   .react-datepicker__day--selected {
     background-color: ${({ theme }) => theme.colors.black};
     color: #fff;
   }
+
   .react-datepicker__day--today {
     background-color: ${({ theme }) => theme.colors.gray_400};
     color: ${({ theme }) => theme.colors.black};
     font-weight: 400;
     border-radius: 0.3rem;
   }
+  
   .react-datepicker__day--keyboard-selected {
     background-color: #fff;
   }
@@ -58,7 +67,7 @@ export const Header = styled.div`
   margin: 0.6rem;
 `;
 
-export const ButtonCSS = css`
+export const ButtonStyles = css`
   background-color: white;
   width: 2.25rem;
   height: 2.25rem;
