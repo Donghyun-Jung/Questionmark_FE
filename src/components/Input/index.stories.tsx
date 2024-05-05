@@ -24,6 +24,7 @@ Error.args = {
   message: 'This is an error message',
   labelType: 'bold',
 };
+
 export const Disabled = Template.bind({});
 Disabled.args = {
   label: '이메일',
@@ -32,6 +33,7 @@ Disabled.args = {
   labelType: 'bold',
   disabled: true,
 };
+
 export const Search = {
   render: () => {
     return (
@@ -47,6 +49,7 @@ export const Search = {
       />
     );
   },
+  
   name: 'Search',
   decorators: [
     (Story: Story) => (
