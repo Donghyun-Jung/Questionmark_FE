@@ -1,14 +1,13 @@
 import { css } from '@emotion/react';
 import type { Meta, Story } from '@storybook/react';
 import Input from './index';
-import type { Props } from './index';
+import type { InputProps } from './index';
 
 export default {
   component: Input,
-  title: 'Input',
-} as Meta;
+} as Meta<typeof Input>;
 
-const Template: Story<Props> = (args) => <Input {...args} />;
+const Template: Story<InputProps> = (args) => <Input {...args} />;
 
 export const DefaultRegular = Template.bind({});
 DefaultRegular.args = {

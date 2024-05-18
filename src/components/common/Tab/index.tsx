@@ -1,8 +1,14 @@
 import type { PropsWithChildren } from 'react';
 import * as Styled from './style';
-const Tab = (props: PropsWithChildren) => {
-  const { children } = props;
-  return <Styled.Root>{children}</Styled.Root>;
+
+interface TabProps {
+  className?: string;
+}
+
+const Tab = (props: PropsWithChildren<TabProps>) => {
+  const { children, className } = props;
+
+  return <Styled.Root className={className}>{children}</Styled.Root>;
 };
 
 interface MenuProps {

@@ -3,6 +3,10 @@ import { css } from '@emotion/react';
 import type { Meta, StoryObj } from '@storybook/react';
 import Calendar from '@/components/common/Calendar';
 
+export default {
+  component: Calendar,
+} as Meta<typeof Calendar>;
+
 export const WithState: StoryObj<typeof Calendar> = {
   render: function Render() {
     const [date, setDate] = useState(new Date());

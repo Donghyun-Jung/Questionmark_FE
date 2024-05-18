@@ -17,12 +17,15 @@ export const Menu = styled.div`
   width: 50%;
   padding: 0.25em;
   border-radius: 3px;
+
   cursor: pointer;
+
   &.selected {
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 6px;
     background-color: white;
     color: ${({ theme }) => theme.colors.black};
   }
+
   &:hover {
     color: ${({ theme }) => theme.colors.black};
   }

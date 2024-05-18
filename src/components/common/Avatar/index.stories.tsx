@@ -7,7 +7,7 @@ export default {
 
 export const Default = {
   args: {
-    iconName: 'ic_tily',
+    iconName: 'ic_duel',
   },
 
   name: 'Default',

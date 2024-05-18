@@ -14,11 +14,11 @@ export const buttonStyles = {
   outline: (theme: EmotionTheme) => css`
     border: 1px solid ${theme.colors.gray_400};
     background-color: ${theme.colors.white};
- 
+
     &:disabled {
       color: ${theme.colors.white};
       border: none;
-    }    
+    }
   `,
   ghost: (theme: EmotionTheme) => css`
     border: none;
@@ -26,7 +26,7 @@ export const buttonStyles = {
 
     &:disabled {
       color: ${theme.colors.white};
-    }    
+    }
   `,
   default: (theme: EmotionTheme) => css`
     border: none;
@@ -48,6 +48,7 @@ export const Button = styled.button<StyledButtonProps>`
   font-size: 1rem;
   cursor: pointer;
   ${({ variant, theme }) => buttonStyles[variant](theme)}
+
   &:disabled {
     cursor: not-allowed;
     background-color: ${({ theme }) => theme.colors.gray_700};

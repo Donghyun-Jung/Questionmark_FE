@@ -6,6 +6,7 @@ import Flex from '@/components/common/Flex';
 
 export const Label = styled.label`
   cursor: pointer;
+
   input[type='checkbox'] {
     position: absolute;
     width: 1px;
@@ -30,11 +31,11 @@ export const Checkbox = styled.span<CheckboxProps>`
       0px 1px 3px 0px rgba(16, 24, 40, 0.1),
       0px 1px 2px -1px rgba(0, 0, 0, 0.1);
 
-  ${checked &&
+    ${checked &&
     css`
       background-color: ${theme.colors.black};
     `}
-  `} 
+  `}
 `;
 
 export const CheckboxImage = styled(Image)`

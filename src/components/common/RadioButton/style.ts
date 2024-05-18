@@ -7,6 +7,7 @@ export const Label = styled.label`
   align-items: center;
   cursor: pointer;
   user-select: none;
+
   & > input {
     position: absolute;
     width: 1px;
