@@ -1,12 +1,11 @@
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import type { DUEL } from '@/api/type';
-import * as Style from '@/components/Roadmap/RoadmapList/DUELCard/style';
+import { type Roadmap } from '@/api/type';
 import Logo from '@/components/common/Logo';
+import * as Style from '@/components/roadmap/roadmapList/DUELCard/style';
 import DUEL_LINK from '@/constants/links';
 
 interface DUELCardProps {
-  roadmap: DUEL;
+  roadmap: Roadmap;
 }
 
 const DUELCard = (props: DUELCardProps) => {
@@ -19,18 +18,24 @@ const DUELCard = (props: DUELCardProps) => {
         router.push(DUEL_LINK.roadmapDetail(roadmap.id));
       }}>
       <section>
-        <Logo type="logo" imageSize={25} />
-        <Image
-          src={'https://ppss.kr/wp-content/uploads/2022/10/1-6.jpg'}
+        <Style.Container>
+          <Logo type="logo" imageSize={25} />
+        </Style.Container>
+        <img
+          src={roadmap.image}
           width={500}
           height={250}
-          style={{ width: '100%', height: 'auto' }}
-          alt={'roadmapImg'}
+          style={{ width: '100%', height: '100%' }}
+          alt={'듀얼 로드맵 이미지'}
         />
-        <h5>{roadmap.name}</h5>
+        <Style.Container>
+          <h3>{roadmap.name}</h3>
+        </Style.Container>
       </section>
 
-      <p>{roadmap.stepNum}개 STEP</p>
+      <Style.Container>
+        <p>{roadmap.stepNum}개 STEP</p>
+      </Style.Container>
     </Style.Root>
   );
 };

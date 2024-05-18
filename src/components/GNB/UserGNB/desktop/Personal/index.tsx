@@ -1,18 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import {
-  useGetRoadmapSteps,
-  useGetRoadmapsMy,
-  usePostRoadmapStepIndividual,
-  usePostRoadmapIndividual,
-} from '@/api/hooks/roadmap';
-import { usePostTil } from '@/api/hooks/til';
+import { useGetRoadmapSteps, useGetRoadmapsMy, usePostSteps, usePostRoadmapsIndividial } from '@/api/hooks/roadmap';
+import { usePostTils } from '@/api/hooks/til';
 import type { Step } from '@/api/type';
-import PlusButton from '@/components/GNB/UserGNB/desktop/PlusButton';
 import Button from '@/components/common/Button';
 import Card from '@/components/common/Card';
 import Input from '@/components/common/Input';
+import ListItem from '@/components/gnb/UserGNB/desktop/Personal/ListItem';
+import PlusButton from '@/components/gnb/UserGNB/desktop/PlusButton';
 import DUEL_LINKS from '@/constants/links';
 import * as Styled from './style';
 
@@ -27,9 +23,15 @@ const Personal = () => {
   const router = useRouter();
   const { data: roadmaps } = useGetRoadmapsMy();
   const { steps } = useGetRoadmapSteps(roadmapId);
-  const { postRoadmapsIndividual } = usePostRoadmapIndividual();
-  const { postRoadmapStepIndividual } = usePostRoadmapStepIndividual();
-  const { postTil } = usePostTil();
+  const { postRoadmapsIndividialAsync } = usePostRoadmapsIndividial();
+  const { postStepsAsync } = usePostSteps();
+  const { postTilsAsync } = usePostTils();
+
+  useEffect(() => {
+    if (roadmaps.category.length !== 0) {
+      setRoadmapId(roadmaps.category[0].id);
+    }
+  }, [roadmaps.category]);
 
   const {
     control: roadmapControl,
@@ -56,13 +58,15 @@ const Personal = () => {
   });
 
   const createRoadmap: SubmitHandler<{ roadmapTitle: string }> = (formData) => {
-    postRoadmapsIndividual(formData.roadmapTitle);
+    postRoadmapsIndividialAsync({
+      body: { name: formData.roadmapTitle, description: null, isPublic: false, category: 'individual' },
+    });
     roadmapReset();
     setIsRoadmapButtonSelected(false);
   };
 
   const createStep: SubmitHandler<{ stepTitle: string }> = (formData) => {
-    postRoadmapStepIndividual({ roadmapId, title: formData.stepTitle });
+    postStepsAsync({ body: { roadmapId, title: formData.stepTitle, description: null, dueDate: null } });
     stepReset();
     setIsStepButtonSelected(false);
   };
@@ -72,7 +76,7 @@ const Personal = () => {
     const NOT_TIL_CREATED_FOR_STEP = null;
 
     if (tilId === NOT_TIL_CREATED_FOR_STEP) {
-      const data = await postTil({ roadmapId, stepId, title: selectedStepTitle });
+      const data = await postTilsAsync({ body: { roadmapId, stepId, title: selectedStepTitle } });
       router.push(DUEL_LINKS.tilWrite({ roadmapId, stepId, tilId: data?.result.id }));
     } else {
       router.push(DUEL_LINKS.tilWrite({ roadmapId, stepId, tilId }));
@@ -114,22 +118,29 @@ const Personal = () => {
                     message={roadmapErrors.roadmapTitle?.message}
                     status={roadmapErrors.roadmapTitle ? 'error' : 'default'}
                     {...field}
+                    onBlur={() => setIsRoadmapButtonSelected(false)}
                   />
                 )}
               />
             </Styled.Form>
           ) : (
-            <PlusButton title="카테고리 추가하기" onClick={() => setIsRoadmapButtonSelected(true)} />
+            <PlusButton
+              testid="plusButton1"
+              title="카테고리 추가하기"
+              onClick={() => setIsRoadmapButtonSelected(true)}
+            />
           )}
           <Styled.List>
             {roadmaps?.category.map((roadmap) => {
               return (
-                <Styled.Item
+                <ListItem
+                  roadmapId={roadmap.id}
                   selected={roadmapId === roadmap.id}
                   onClick={() => setRoadmapId(roadmap.id)}
+                  onClickRoadmap={setRoadmapId}
                   key={roadmap.id}>
                   {roadmap.name}
-                </Styled.Item>
+                </ListItem>
               );
             })}
           </Styled.List>
@@ -157,20 +168,27 @@ const Personal = () => {
                       message={errors.stepTitle?.message}
                       status={errors.stepTitle ? 'error' : 'default'}
                       {...field}
+                      onBlur={() => setIsStepButtonSelected(false)}
                     />
                   )}
                 />
               </Styled.Form>
             ) : (
-              <PlusButton title="TIL 추가하기" onClick={() => setIsStepButtonSelected(true)} />
+              <PlusButton testid="plusButton2" title="TIL 추가하기" onClick={() => setIsStepButtonSelected(true)} />
             ))}
 
           <Styled.List>
             {steps?.result.steps.map((step: Step) => {
               return (
-                <Styled.Item selected={stepId === step.id} onClick={() => handleSelcteStep(step)} key={step.id}>
+                <ListItem
+                  selected={stepId === step.id}
+                  stepId={step.id}
+                  roadmapId={roadmapId}
+                  onClick={() => handleSelcteStep(step)}
+                  onClickRoadmap={setRoadmapId}
+                  key={step.id}>
                   {step.title}
-                </Styled.Item>
+                </ListItem>
               );
             })}
           </Styled.List>

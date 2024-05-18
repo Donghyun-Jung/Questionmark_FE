@@ -17,7 +17,7 @@ const StepSelect = () => {
 
   useEffect(() => {
     // 초기 useEffect에서 steps가 undefined일 경우 return
-    if (!steps || !router.isReady) return;
+    if (!steps || !router.isReady || steps.result.steps.length === 0) return;
 
     const transformData = steps.result.steps.map((step) => {
       return {
@@ -26,7 +26,6 @@ const StepSelect = () => {
       };
     });
 
-    overlapParamsToUrl({ stepId: router.query.stepId ? router.query.stepId : transformData[0].value });
     setSelectedOption(
       router.query.stepId ? transformData.find((data) => data.value === router.query.stepId) : transformData[0],
     );

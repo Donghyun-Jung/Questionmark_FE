@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import * as Styled from '@/components/GNB/UserGNB/desktop/TILModal/style';
-import MobilePersonal from '@/components/GNB/UserGNB/mobile/MobilePersonal';
-import MobileRoadMap from '@/components/GNB/UserGNB/mobile/MobileRoadMap';
 import Modal, { type ModalProps } from '@/components/common/Modal';
 import Tab from '@/components/common/Tab';
+import * as Styled from '@/components/gnb/UserGNB/desktop/TILModal/style';
+import MobilePersonal from '@/components/gnb/UserGNB/mobile/MobilePersonal';
+import MobileRoadMap from '@/components/gnb/UserGNB/mobile/MobileRoadMap';
 
 const MobileTILModal = (props: ModalProps) => {
   const { isOpen, onClose } = props;
@@ -20,7 +20,7 @@ const MobileTILModal = (props: ModalProps) => {
       modalContentStyles={Styled.MobileModalContentStyles}
       isOpen={isOpen}
       onClose={onClose}>
-      <Styled.ModalTitle>학습 선택</Styled.ModalTitle>
+      <Styled.ModalTitle>TIL 선택</Styled.ModalTitle>
 
       <Tab css={Styled.TabStyles}>
         {tabMenu.map((menu) => {
@@ -29,7 +29,8 @@ const MobileTILModal = (props: ModalProps) => {
               key={menu.name}
               css={Styled.TabMenuStyles}
               onClick={() => setCurTab(menu.status)}
-              className={curTab === menu.status ? 'selected' : ''}>
+              className={curTab === menu.status ? 'selected' : ''}
+              isTooltip={false}>
               {menu.name}
             </Tab.Menu>
           );

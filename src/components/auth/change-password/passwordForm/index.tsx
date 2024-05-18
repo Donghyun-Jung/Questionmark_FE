@@ -1,17 +1,18 @@
 import { Controller } from 'react-hook-form';
-import Link from 'next/link';
-import usePassword from '@/components/auth/change-password/passwordForm/usePassword';
-import AuthButtonContainer from '@/components/auth/common/AuthButtonContainer';
+import { useRouter } from 'next/router';
+import usePassword from '@/components/auth/change-password/PasswordForm/usePassword';
 import AuthForm from '@/components/auth/common/AuthForm';
 import AuthLogo from '@/components/auth/common/AuthLogo';
 import AuthModal from '@/components/auth/common/AuthModal';
 import Button from '@/components/common/Button';
 import Flex from '@/components/common/Flex';
 import Input from '@/components/common/Input';
+import TwoButtonContainer from '@/components/common/TwoButtonContainer';
 import DUEL_LINKS from '@/constants/links';
 import REGEX from '@/constants/regex';
 
 const PasswordForm = () => {
+  const router = useRouter();
   const { isOpen, handleClose, isLoading, control, handleSubmit, getValues, errors, onSubmit } = usePassword();
 
   return (
@@ -63,12 +64,14 @@ const PasswordForm = () => {
               />
             )}
           />
-          <AuthButtonContainer>
-            <Link href={DUEL_LINKS.verify()}>취소</Link>
+          <TwoButtonContainer>
+            <Button type="button" variant="ghost" onClick={() => router.push(DUEL_LINKS.verify())}>
+              취소
+            </Button>
             <Button type="submit" isLoading={isLoading}>
               변경
             </Button>
-          </AuthButtonContainer>
+          </TwoButtonContainer>
         </AuthForm>
       </Flex>
       <AuthModal isOpen={isOpen} onClose={handleClose} content="비밀번호 변경이 완료되었습니다." />

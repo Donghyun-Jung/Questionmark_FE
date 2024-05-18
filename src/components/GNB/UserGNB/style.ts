@@ -28,16 +28,25 @@ export const Inner = styled.header`
   @media ${({ theme }) => theme.mediaQuery.md} {
     padding: 0 8px;
   }
+
+  & > div > button {
+    z-index: 20;
+    &:hover {
+      visibility: hidden;
+    }
+  }
 `;
 
 export const TILInfo = styled.div`
+  position: relative;
   background-color: ${({ theme }) => theme.colors.gray_200};
   padding: 1rem;
   border-radius: 1rem;
   font-size: 15px;
 
   & > span:nth-of-type(2) {
-    color: ${({ theme }) => theme.colors.rose};
+    /* color: ${({ theme }) => theme.colors.rose}; */
+    color: #db0f38;
   }
 `;
 
@@ -59,3 +68,6 @@ export const ButtonStyles = (theme: EmotionTheme) => css`
     font-weight: 700;
   }
 `;
+
+export const RefContainer = styled.div``;
+

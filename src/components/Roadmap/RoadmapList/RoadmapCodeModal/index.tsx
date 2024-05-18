@@ -1,13 +1,13 @@
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
 import { usePostRoadmapsGroupsParticipate } from '@/api/hooks/roadmap';
-import * as Styled from '@/components/Roadmap/RoadmapList/RoadmapCodeModal/style';
 import Button from '@/components/common/Button';
 import Input from '@/components/common/Input';
 import Modal, { type ModalProps } from '@/components/common/Modal';
+import * as Styled from '@/components/roadmap/roadmapList/RoadmapCodeModal/style';
 
 const RoadmapCodeModal = (props: ModalProps) => {
   const { isOpen, onClose } = props;
-  const { postRoadmapsGroupsParticipate, isLoading } = usePostRoadmapsGroupsParticipate();
+  const { postRoadmapsGroupsParticipateAsync, isLoading } = usePostRoadmapsGroupsParticipate();
 
   const {
     control,
@@ -17,10 +17,10 @@ const RoadmapCodeModal = (props: ModalProps) => {
   } = useForm({ defaultValues: { code: '' }, mode: 'onSubmit' });
 
   const onSubmit: SubmitHandler<{ code: string }> = async (formData) => {
-    const data = await postRoadmapsGroupsParticipate(formData.code);
+    const data = await postRoadmapsGroupsParticipateAsync({ body: { code: formData.code } });
 
     if (data.success) {
-      onClose();
+      onClose?.();
       reset();
     }
   };
@@ -51,3 +51,4 @@ const RoadmapCodeModal = (props: ModalProps) => {
 };
 
 export default RoadmapCodeModal;
+

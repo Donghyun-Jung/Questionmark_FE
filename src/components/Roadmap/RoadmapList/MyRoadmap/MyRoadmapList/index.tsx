@@ -1,58 +1,55 @@
-import Image from 'next/image';
 import { useGetRoadmapsMyList } from '@/api/hooks/roadmap';
-import GroupCard from '@/components/Roadmap/RoadmapList/GroupCard';
-import * as Styled from '@/components/Roadmap/RoadmapList/MyRoadmap/MyRoadmapList/style';
-import DUELCard from '@/components/Roadmap/RoadmapList/DUELCard';
 import CustomSuspense from '@/components/common/CustomSuspense';
+import EmptyList from '@/components/common/EmptyList';
 import Responsive from '@/components/common/Responsive';
+import GroupCard from '@/components/roadmap/roadmapList/GroupCard';
+import * as Styled from '@/components/roadmap/roadmapList/MyRoadmap/MyRoadmapList/style';
+import DUELCard from '@/components/roadmap/roadmapList/DUELCard';
 
-const Slider = () => {
-  const { roadmaps, isLoading: isRoadmapLoading } = useGetRoadmapsMyList();
+const MyRoadmapList = () => {
+  const { duels, groups, isLoading } = useGetRoadmapsMyList();
 
-  console.log(roadmaps);
-
-  if (roadmaps?.groups.length === 0 && roadmaps?.duels.length === 0) {
-    return <EmptyMyRoadmap />;
+  if (groups?.length === 0 && duels?.length === 0) {
+    return (
+      <EmptyList image="ic_step">
+        <p>참여중인 로드맵이 없습니다.</p>
+        <p>관심있는 로드맵을 찾아 가입해보세요!</p>
+      </EmptyList>
+    );
   }
 
   return (
-    <CustomSuspense isLoading={isRoadmapLoading} fallback={<MyRoadmapSkeleton />}>
+    <CustomSuspense isLoading={isLoading} fallback={<MyRoadmapListSkeleton />}>
       <Styled.Slider {...setting}>
-        {roadmaps?.groups.map((roadmap, idx) => <GroupCard key={idx} roadmap={roadmap} />)}
-        {roadmaps?.duels.map((roadmap) => <DUELCard key={roadmap.id} roadmap={roadmap} />)}
+        {groups?.map((roadmap, idx) => <GroupCard key={idx} roadmap={roadmap} />)}
+        {duels?.map((roadmap) => <DUELCard key={roadmap.id} roadmap={roadmap} />)}
       </Styled.Slider>
     </CustomSuspense>
   );
 };
 
-const MyRoadmapSkeleton = () => {
+const MyRoadmapListSkeleton = () => {
   return (
     <>
-      {' '}
       <Responsive device="desktop">
-        <Styled.SkeletonRoot>
-          <Styled.Skeleton />
-          <Styled.Skeleton />
-          <Styled.Skeleton />
-          <Styled.Skeleton />
+        <Styled.SkeletonRoot gap={2}>
+          {Array(4)
+            .fill(null)
+            .map((_, idx) => (
+              <Styled.Skeleton key={idx} />
+            ))}
         </Styled.SkeletonRoot>
       </Responsive>
       <Responsive device="mobile">
         <Styled.SkeletonRoot>
-          <Styled.Skeleton />
-          <Styled.Skeleton />
+          {Array(2)
+            .fill(null)
+            .map((_, idx) => (
+              <Styled.Skeleton key={idx} />
+            ))}
         </Styled.SkeletonRoot>
       </Responsive>
     </>
-  );
-};
-
-const EmptyMyRoadmap = () => {
-  return (
-    <Styled.EmptyRoot>
-      <Image src="/assets/icons/ic_step.svg" alt="빈 로드맵" width={60} height={60} />
-      <h3>참여중인 로드맵이 없습니다.</h3>
-    </Styled.EmptyRoot>
   );
 };
 
@@ -64,14 +61,14 @@ const setting = {
   slidesToScroll: 4,
   responsive: [
     {
-      breakpoint: 770,
+      breakpoint: 1024,
       settings: {
         slidesToShow: 3,
         slidesToScroll: 3,
       },
     },
     {
-      breakpoint: 640,
+      breakpoint: 768,
       settings: {
         slidesToShow: 2,
         slidesToScroll: 2,
@@ -81,4 +78,4 @@ const setting = {
   ],
 };
 
-export default Slider;
+export default MyRoadmapList;

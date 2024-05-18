@@ -1,20 +1,19 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useGetStepTils } from '@/api/hooks/til';
-import TIL from '@/components/Roadmap/PeopleTIL/TIL';
 import Button from '@/components/common/Button';
 import ConditionalRender from '@/components/common/ConditionalRender';
 import CustomSuspense from '@/components/common/CustomSuspense';
 import Fallback from '@/components/common/Fallback';
 import type { ErrorBoundaryProps } from '@/components/common/GlobalErrorBoundary';
 import Skeleton from '@/components/common/Skeleton';
+import TIL from '@/components/roadmap/peopleTIL/PeopleTILSection/TIL';
 import DUEL_LINKS from '@/constants/links';
 import * as Styled from './style';
 
 const PeopleTILSection = () => {
   const { query } = useRouter();
   const { memberTils, isLoading } = useGetStepTils({
-    roadmapId: Number(query.roadmapId),
     stepId: Number(query.stepId),
   });
 

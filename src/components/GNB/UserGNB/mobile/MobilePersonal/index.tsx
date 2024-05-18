@@ -1,19 +1,15 @@
-import { useState } from 'react';
-import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/router';
-import {
-  useGetRoadmapSteps,
-  usePostRoadmapStepIndividual,
-  usePostRoadmapIndividual,
-  useGetRoadmapsMy,
-} from '@/api/hooks/roadmap';
-import { usePostTil } from '@/api/hooks/til';
+import { useGetRoadmapSteps, useGetRoadmapsMy, usePostRoadmapsIndividial, usePostSteps } from '@/api/hooks/roadmap';
+import { usePostTils } from '@/api/hooks/til';
 import type { Step } from '@/api/type';
-import PlusButton from '@/components/GNB/UserGNB/desktop/PlusButton';
 import Button from '@/components/common/Button';
 import Card from '@/components/common/Card';
 import Icon from '@/components/common/Icon';
 import Input from '@/components/common/Input';
+import ListItem from '@/components/gnb/UserGNB/desktop/Personal/ListItem';
+import PlusButton from '@/components/gnb/UserGNB/desktop/PlusButton';
 import DUEL_LINKS from '@/constants/links';
 import * as Styled from './style';
 
@@ -24,13 +20,14 @@ const MobilePersonal = () => {
   const [tilId, setTilId] = useState<number | null>(null);
   const [isRoadmapButtonSelected, setIsRoadmapButtonSelected] = useState<boolean>(false);
   const [isStepButtonSelected, setIsStepButtonSelected] = useState<boolean>(false);
+  const [isRenderNextButton, setIsRenderNextButton] = useState<boolean>(false);
 
   const router = useRouter();
   const { data: roadmaps } = useGetRoadmapsMy();
   const { steps } = useGetRoadmapSteps(roadmapId);
-  const { postRoadmapsIndividual } = usePostRoadmapIndividual();
-  const { postRoadmapStepIndividual } = usePostRoadmapStepIndividual();
-  const { postTil } = usePostTil();
+  const { postRoadmapsIndividialAsync } = usePostRoadmapsIndividial();
+  const { postStepsAsync } = usePostSteps();
+  const { postTilsAsync } = usePostTils();
 
   const {
     control: roadmapControl,
@@ -57,13 +54,15 @@ const MobilePersonal = () => {
   });
 
   const createRoadmap: SubmitHandler<{ roadmapTitle: string }> = (formData) => {
-    postRoadmapsIndividual(formData.roadmapTitle);
+    postRoadmapsIndividialAsync({
+      body: { name: formData.roadmapTitle, description: null, isPublic: false, category: 'individual' },
+    });
     roadmapReset();
     setIsRoadmapButtonSelected(false);
   };
 
   const createStep: SubmitHandler<{ stepTitle: string }> = (formData) => {
-    postRoadmapStepIndividual({ roadmapId, title: formData.stepTitle });
+    postStepsAsync({ body: { roadmapId, title: formData.stepTitle, description: null, dueDate: null } });
     stepReset();
     setIsStepButtonSelected(false);
   };
@@ -73,7 +72,7 @@ const MobilePersonal = () => {
     const NOT_TIL_CREATED_FOR_STEP = null;
 
     if (tilId === NOT_TIL_CREATED_FOR_STEP) {
-      const data = await postTil({ roadmapId, stepId, title: selectedStepTitle });
+      const data = await postTilsAsync({ body: { roadmapId, stepId, title: selectedStepTitle } });
       router.push(DUEL_LINKS.tilWrite({ roadmapId, stepId, tilId: data?.result.id }));
     } else {
       router.push(DUEL_LINKS.tilWrite({ roadmapId, stepId, tilId }));
@@ -89,62 +88,23 @@ const MobilePersonal = () => {
   return (
     <>
       <Styled.ModalInfo>
-        {roadmapId !== NOT_SELECTED && (
+        {isRenderNextButton && (
           <Icon
             iconName="ic_arrowLeft"
             alt="Logo"
             imageSize={20}
             ext="svg"
             css={Styled.BackSpaceStyles}
-            onClick={() => setRoadmapId(NOT_SELECTED)}
+            onClick={() => {
+              setRoadmapId(NOT_SELECTED);
+              setIsRenderNextButton(false);
+            }}
           />
         )}
-        {roadmapId === NOT_SELECTED ? <div>카테고리</div> : <div>TIL</div>}
+        {isRenderNextButton ? <div>TIL</div> : <div>카테고리</div>}
       </Styled.ModalInfo>
       <Card css={Styled.CardStyles}>
-        {roadmapId === NOT_SELECTED ? (
-          <Styled.RoadmapSection>
-            {isRoadmapButtonSelected ? (
-              <Styled.Form onSubmit={roadmapHandleSubmit(createRoadmap)}>
-                <Controller
-                  name="roadmapTitle"
-                  control={roadmapControl}
-                  rules={{
-                    required: '카테고리명을 입력해주세요.',
-                    pattern: {
-                      value: /^(.{1,20})$/,
-                      message: '글자수는 20자까지 입력가능합니다.',
-                    },
-                  }}
-                  render={({ field }) => (
-                    <Input
-                      css={Styled.InputContainerStyles}
-                      inputStyles={Styled.InputStyles}
-                      placeholder="카테고리명을 입력해주세요."
-                      message={roadmapErrors.roadmapTitle?.message}
-                      status={roadmapErrors.roadmapTitle ? 'error' : 'default'}
-                      {...field}
-                    />
-                  )}
-                />
-              </Styled.Form>
-            ) : (
-              <PlusButton title="카테고리 추가하기" onClick={() => setIsRoadmapButtonSelected(true)} />
-            )}
-            <Styled.List>
-              {roadmaps?.category.map((roadmap) => {
-                return (
-                  <Styled.Item
-                    selected={roadmapId === roadmap.id}
-                    onClick={() => setRoadmapId(roadmap.id)}
-                    key={roadmap.id}>
-                    {roadmap.name}
-                  </Styled.Item>
-                );
-              })}
-            </Styled.List>
-          </Styled.RoadmapSection>
-        ) : (
+        {isRenderNextButton ? (
           <Styled.StepSection>
             {isStepButtonSelected ? (
               <Styled.Form onSubmit={stepHandleSubmit(createStep)}>
@@ -166,6 +126,7 @@ const MobilePersonal = () => {
                       message={errors.stepTitle?.message}
                       status={errors.stepTitle ? 'error' : 'default'}
                       {...field}
+                      onBlur={() => setIsStepButtonSelected(false)}
                     />
                   )}
                 />
@@ -177,20 +138,81 @@ const MobilePersonal = () => {
             <Styled.List>
               {steps?.result.steps.map((step: Step) => {
                 return (
-                  <Styled.Item selected={stepId === step.id} onClick={() => handleSelcteStep(step)} key={step.id}>
+                  <ListItem
+                    roadmapId={roadmapId}
+                    stepId={step.id}
+                    selected={stepId === step.id}
+                    onClick={() => handleSelcteStep(step)}
+                    key={step.id}>
                     {step.title}
-                  </Styled.Item>
+                  </ListItem>
                 );
               })}
             </Styled.List>
           </Styled.StepSection>
+        ) : (
+          <Styled.RoadmapSection>
+            {isRoadmapButtonSelected ? (
+              <Styled.Form onSubmit={roadmapHandleSubmit(createRoadmap)}>
+                <Controller
+                  name="roadmapTitle"
+                  control={roadmapControl}
+                  rules={{
+                    required: '카테고리명을 입력해주세요.',
+                    pattern: {
+                      value: /^(.{1,20})$/,
+                      message: '글자수는 20자까지 입력가능합니다.',
+                    },
+                  }}
+                  render={({ field }) => (
+                    <Input
+                      css={Styled.InputContainerStyles}
+                      inputStyles={Styled.InputStyles}
+                      placeholder="카테고리명을 입력해주세요."
+                      message={roadmapErrors.roadmapTitle?.message}
+                      status={roadmapErrors.roadmapTitle ? 'error' : 'default'}
+                      {...field}
+                      onBlur={() => setIsRoadmapButtonSelected(false)}
+                    />
+                  )}
+                />
+              </Styled.Form>
+            ) : (
+              <PlusButton title="카테고리 추가하기" onClick={() => setIsRoadmapButtonSelected(true)} />
+            )}
+            <Styled.List>
+              {roadmaps?.category.map((roadmap) => {
+                return (
+                  <ListItem
+                    roadmapId={roadmap.id}
+                    selected={roadmapId === roadmap.id}
+                    onClick={() => {
+                      setRoadmapId(roadmap.id);
+                    }}
+                    key={roadmap.id}>
+                    {roadmap.name}
+                  </ListItem>
+                );
+              })}
+            </Styled.List>
+          </Styled.RoadmapSection>
         )}
       </Card>
 
       <Styled.ButtonContainer>
-        <Button onClick={routeTILWrite} css={Styled.ButtonStyles}>
-          완료
-        </Button>
+        {isRenderNextButton ? (
+          <Button onClick={routeTILWrite} css={Styled.ButtonStyles}>
+            완료
+          </Button>
+        ) : (
+          <Button
+            onClick={() => {
+              setIsRenderNextButton(true);
+            }}
+            css={Styled.ButtonStyles}>
+            다음
+          </Button>
+        )}
       </Styled.ButtonContainer>
     </>
   );

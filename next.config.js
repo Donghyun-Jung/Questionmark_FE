@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   output: 'standalone',
   images: {
     remotePatterns: [
@@ -13,8 +13,20 @@ const nextConfig = {
         hostname: 'ppss.kr',
       },
       {
+        protocol: 'https',
+        hostname: 'cdn.inflearn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'duel-bucket.s3.ap-northeast-2.amazonaws.com',
+      },
+      {
         protocol: 'http',
         hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ibb.co',
       },
     ],
   },
@@ -45,5 +57,11 @@ const nextConfig = {
     return config;
   },
 };
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
+module.exports = withBundleAnalyzer({});
 
 module.exports = nextConfig;

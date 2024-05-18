@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
-import * as Styled from '@/components/GNB/GuestGNB/style';
-import useGuestGNB from '@/components/GNB/GuestGNB/useGuestGNB';
-import GNBLogo from '@/components/GNB/common/GNBLogo';
-import GNBNav from '@/components/GNB/common/GNBNav';
 import Button from '@/components/common/Button';
 import Flex from '@/components/common/Flex';
 import Responsive from '@/components/common/Responsive';
+import * as Styled from '@/components/gnb/GuestGNB/style';
+import useGuestGNB from '@/components/gnb/GuestGNB/useGuestGNB';
+import GNBLogo from '@/components/gnb/common/GNBLogo';
+import GNBNav from '@/components/gnb/common/GNBNav';
 import DUEL_LINKS from '@/constants/links';
 
 const GuestGNB = () => {
@@ -28,11 +28,11 @@ const GuestGNB = () => {
           </Responsive>
           <Responsive device="desktop">
             <Flex>
-              <Button variant="ghost" css={Styled.ButtonStyles} onClick={() => router.push(DUEL_LINKS.login())}>
-                로그인
-              </Button>
-              <Button css={Styled.ButtonStyles} onClick={() => router.push(DUEL_LINKS.verify())}>
+              <Button variant="ghost" css={Styled.ButtonStyles} onClick={() => router.push(DUEL_LINKS.verify())}>
                 회원가입
+              </Button>
+              <Button css={Styled.ButtonStyles} onClick={() => router.push(DUEL_LINKS.login())}>
+                로그인
               </Button>
             </Flex>
           </Responsive>

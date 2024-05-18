@@ -1,10 +1,11 @@
 import { Alarm } from '@/api/type';
-import * as Styled from '@/components/GNB/common/Alarm/style';
+import * as Styled from '@/components/gnb/common/Alarm/style';
 import Avatar from '@/components/common/Avatar';
 import DUEL_LINKS from '@/constants/links';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
+import { useQueryClient } from '@tanstack/react-query';
+import { USER_QUERY_KEY } from '@/constants/queryKey';
 
 interface AlarmProps {
   alarm: Alarm;
@@ -12,14 +13,17 @@ interface AlarmProps {
 
 const Alarm = (props: AlarmProps) => {
   const {alarm} = props;
-
+  const queryClient = useQueryClient();
   const router = useRouter();
+
   return (
     <Styled.Item
+      isRead={alarm.isRead}
       key={alarm.id}
-      onClick={() =>
+      onClick={() => {
+        queryClient.invalidateQueries(USER_QUERY_KEY.alarms());
         router.push(DUEL_LINKS.tilWrite({ roadmapId: alarm.roadmap.id, stepId: alarm.step.id, tilId: alarm.tilId }))
-      }>
+      }}>
       <Avatar imageSize={40} imageUrl={alarm.sender.image} alt="프로필 이미지" />
       <Styled.Content>
         <Styled.Title>
@@ -31,7 +35,7 @@ const Alarm = (props: AlarmProps) => {
             <span>님이 댓글을 남겼습니다.</span>
           </Styled.Commenter>
 
-          <Styled.Time>{dayjs(alarm.createdAt).format('YYYY.MM.DD')}</Styled.Time>
+          <Styled.Time>{dayjs(alarm.createDate).format('YYYY.MM.DD')}</Styled.Time>
         </Styled.Description>
       </Styled.Content>
     </Styled.Item>
@@ -39,12 +43,3 @@ const Alarm = (props: AlarmProps) => {
 };
 
 export default Alarm;
-
-export const EmptyAlarm = () => {
-  return (
-    <Styled.EmptyAlarmRoot>
-      <Image src="/assets/icons/ic_unAlarm.svg" width={36} height={36} alt="알림이 없습니다" />
-      <Styled.EmptyAlarmText>알림이 없습니다.</Styled.EmptyAlarmText>
-    </Styled.EmptyAlarmRoot>
-  );
-};

@@ -1,7 +1,7 @@
-import type { FC, PropsWithChildren } from 'react';
-import GNB from '../common/GNB';
+import type { PropsWithChildren } from 'react';
+import GNB from '@/components/gnb/UserGNB';
 
-const HeaderLayout: FC = (props: PropsWithChildren) => {
+const HeaderLayout = (props: PropsWithChildren) => {
   const { children } = props;
 
   return (

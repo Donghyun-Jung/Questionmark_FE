@@ -4,17 +4,13 @@ import SkeletonBox from '@/components/common/Skeleton';
 export const RoadmapContainer = styled.section`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-column-gap: 20px;
-  grid-row-gap: 40px;
 
-  @media ${({ theme }) => theme.mediaQuery.md} {
+  @media ${({ theme }) => theme.mediaQuery.lg} {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  @media ${({ theme }) => theme.mediaQuery.sm} {
+  @media ${({ theme }) => theme.mediaQuery.md} {
     grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 10px;
-    grid-row-gap: 20px;
   }
 `;
 
@@ -24,8 +20,14 @@ export const ObserverInterSectionTarget = styled.div`
 `;
 
 export const Skeleton = styled(SkeletonBox)`
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 90%;
   height: 230px;
+  margin: 20px auto;
+  padding: 16px 12px 10px;
+  cursor: pointer;
 
   @media ${({ theme }) => theme.mediaQuery.sm} {
     height: 200px;
@@ -36,6 +38,12 @@ export const EmptyRoot = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
-  margin: 55px auto 55px;
+  gap: 20px;
+  margin: 40px auto 55px;
+
+  & > section > p {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+  }
 `;

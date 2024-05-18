@@ -1,17 +1,20 @@
 import { useEffect } from 'react';
-import Image from 'next/image';
+import React from 'react';
 import { useRouter } from 'next/router';
 import { useGetRoadmaps } from '@/api/hooks/roadmap';
-import GroupCard from '@/components/Roadmap/RoadmapList/GroupCard';
-import * as Styled from '@/components/Roadmap/RoadmapList/RecruitRoadmap/RecruitRoadmapList/style';
-import DUELCard from '@/components/Roadmap/RoadmapList/DUELCard';
 import ConditionalRender from '@/components/common/ConditionalRender';
 import CustomSuspense from '@/components/common/CustomSuspense';
+import EmptyList from '@/components/common/EmptyList';
+import GroupCard from '@/components/roadmap/roadmapList/GroupCard';
+import * as Styled from '@/components/roadmap/roadmapList/RecruitRoadmap/RecruitRoadmapList/style';
+import DUELCard from '@/components/roadmap/roadmapList/DUELCard';
+import DUEL_LINKS from '@/constants/links';
 import { useIntersectionObserver } from '@/hooks/useInterSectionObserver';
 
 const RecruitRoadmapList = () => {
   const router = useRouter();
-  const { data, isLoading, fetchNextPage, hasNextPage } = useGetRoadmaps(router.query);
+
+  const { data, isLoading, fetchNextPage, hasNextPage } = useGetRoadmaps({ query: router.query });
 
   const { ref, isVisible } = useIntersectionObserver();
 
@@ -24,9 +27,16 @@ const RecruitRoadmapList = () => {
   return (
     <>
       <CustomSuspense isLoading={isLoading} fallback={<RoadmapSkeleton />}>
-        <ConditionalRender data={data} EmptyUI={<EmptyRecruitRoadmap />}>
+        <ConditionalRender
+          data={data}
+          EmptyUI={
+            <EmptyList image="ic_step" button="로드맵 만들기" onClick={() => router.push(DUEL_LINKS.roadmapCreate())}>
+              <p>모집중인 로드맵이 없습니다.</p>
+              <p>직접 로드맵을 만들고 공유해보세요!</p>
+            </EmptyList>
+          }>
           <Styled.RoadmapContainer>
-            {router.query.category === 'DUEL'
+            {router.query.category === 'duel'
               ? data?.map((roadmap) => <DUELCard key={roadmap.id} roadmap={roadmap} />)
               : data?.map((roadmap) => <GroupCard key={roadmap.id} roadmap={roadmap} />)}
           </Styled.RoadmapContainer>
@@ -40,26 +50,13 @@ const RecruitRoadmapList = () => {
 const RoadmapSkeleton = () => {
   return (
     <Styled.RoadmapContainer>
-      <Styled.Skeleton />
-      <Styled.Skeleton />
-      <Styled.Skeleton />
-      <Styled.Skeleton />
-      <Styled.Skeleton />
-      <Styled.Skeleton />
-      <Styled.Skeleton />
-      <Styled.Skeleton />
-      <Styled.Skeleton />
+      {Array(12)
+        .fill(null)
+        .map((_, idx) => (
+          <Styled.Skeleton key={idx} />
+        ))}
     </Styled.RoadmapContainer>
   );
 };
 
-const EmptyRecruitRoadmap = () => {
-  return (
-    <Styled.EmptyRoot>
-      <Image src="/assets/icons/ic_step.svg" alt="빈 로드맵" width={60} height={60} />
-      <h3>모집중인 로드맵이 없습니다.</h3>
-    </Styled.EmptyRoot>
-  );
-};
-
-export default RecruitRoadmapList;
+export default React.memo(RecruitRoadmapList);
