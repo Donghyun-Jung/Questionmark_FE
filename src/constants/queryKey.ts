@@ -27,4 +27,3 @@ export const TIL_QUERY_KEY = {
   getTilsQuery: (query: QueryKey) => [...TIL_QUERY_KEY.tils, query],
   getStepTils: (stepId: number) => [...TIL_QUERY_KEY.tils, 'steps', stepId],
 };
-
